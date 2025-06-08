@@ -1,14 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-<html>
+  <!DOCTYPE html>
+  <html>
+
   <head>
     <meta charset="UTF-8" />
     <title>Registrar Hotel</title>
   </head>
+
   <body>
     <h2>Registrar Hotel</h2>
 
-    <form method="post" action="/api/hoteles/registrar">
+<form action="${pageContext.request.contextPath}/registrarHotel" method="post">
       <label>Nombre:</label> <input type="text" name="nombre" /><br /><br />
       <label>Ciudad:</label> <input type="text" name="ciudad" /><br /><br />
       <label>Dirección:</label>
@@ -30,4 +32,5 @@
     <br />
     <a href="/">Volver al menú principal</a>
   </body>
-</html>
+
+  </html>

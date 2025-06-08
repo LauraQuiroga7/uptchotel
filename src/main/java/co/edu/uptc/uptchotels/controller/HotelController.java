@@ -31,6 +31,10 @@ public class HotelController {
                                      @RequestParam(required = false) String ciudad) {
         return hotelService.buscarHoteles(nombre, ciudad);
     }
+    @GetMapping("/listarHoteles")
+    public List<Hotel> listarHoteles() {
+        return hotelService.listarHoteles();
+    }
 
     @PutMapping("/editar")
     public void editarHotel(@RequestBody Hotel hotel) {
@@ -43,4 +47,5 @@ public class HotelController {
                                    @RequestParam boolean activo) {
         hotelService.cambiarEstadoHotel(nombre, ciudad, activo);
     }
+    
 }

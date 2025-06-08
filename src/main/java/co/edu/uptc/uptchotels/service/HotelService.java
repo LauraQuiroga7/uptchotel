@@ -44,6 +44,9 @@ public class HotelService {
             }
         }
     }
+    public List<Hotel> listarHoteles() {
+        return new ArrayList<>(hoteles);
+    }
 
     public List<Hotel> getHoteles() {
         return hoteles;

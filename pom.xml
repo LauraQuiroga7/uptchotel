@@ -60,12 +60,16 @@
             <scope>provided</scope>
         </dependency>
     
-        <!-- Opcional: JSTL para funcionalidades adicionales en JSP -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
+    <groupId>jakarta.servlet.jsp.jstl</groupId>
+    <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+</dependency>
+
+
+<dependency>
+    <groupId>org.glassfish.web</groupId>
+    <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+</dependency>
     </dependencies>
 
     <build>
