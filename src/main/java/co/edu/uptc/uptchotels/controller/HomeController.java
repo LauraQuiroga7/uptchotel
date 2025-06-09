@@ -167,4 +167,29 @@ public class HomeController {
     public String reporteReservasPage() {
         return "reporteReservas"; // Muestra /WEB-INF/views/reporteReservas.jsp
     }
+     
+    @GetMapping("/registrar-reserva")
+    public String registrarReserva() {
+        return "registrar-reserva"; // Renderiza registrar-reserva.jsp
+    }
+    
+    @GetMapping("/listar-reservas")
+    public String listarReservas() {
+        return "listar-reservas"; // Renderiza listar-reservas.jsp
+    }
+    
+    @GetMapping("/buscar-reservas")
+    public String buscarReservas() {
+        return "buscar-reservas"; // Renderiza buscar-reservas.jsp
+    }
+    
+    @GetMapping("/reportes")
+    public String reportes() {
+        return "reportes"; // Renderiza reportes.jsp
+    }
+    
+    @GetMapping("/verificar-disponibilidad")
+    public String verificarDisponibilidad() {
+        return "verificar-disponibilidad"; // Renderiza verificar-disponibilidad.jsp
+    }
 }
