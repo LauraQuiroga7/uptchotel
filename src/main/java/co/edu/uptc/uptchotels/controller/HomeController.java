@@ -36,7 +36,14 @@ public class HomeController {
             @RequestParam String telefono,
             @RequestParam String email,
             @RequestParam int capacidad,
-            @RequestParam boolean activo) {
+            @RequestParam boolean activo,
+            Model model) {
+                  boolean verification = hotelService.registeredHotelCity(nombre, ciudad);
+
+    if (verification) {
+        model.addAttribute("error", "Ya existe un hotel con ese nombre en la ciudad especificada.");
+        return "registrarHotel"; // Vuelve al formulario con mensaje
+    }
         Hotel h = new Hotel();
         h.setName(nombre);
         h.setCity(ciudad);
@@ -59,6 +66,17 @@ public class HomeController {
     public String buscarHotelPage() {
         return "buscarHotel"; // Muestra /WEB-INF/views/buscarHotel.jsp
     }
+    @GetMapping("/searchHotel")
+public String buscarHoteles(
+        @RequestParam(required = false) String nombre,
+        @RequestParam(required = false) String ciudad,
+        Model model) {
+
+    List<Hotel> resultados = hotelService.searchCityName(nombre, ciudad);
+    model.addAttribute("listaHoteles", resultados);
+    return "listarHoteles";
+}
+
 
     @GetMapping("/cambiarEstadoHotel")
     public String cambiarEstadoHotelPage() {

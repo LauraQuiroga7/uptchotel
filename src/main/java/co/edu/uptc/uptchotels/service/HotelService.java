@@ -58,4 +58,11 @@ public class HotelService {
                          (ciudad == null || hotel.getCity().toLowerCase().contains(ciudad.toLowerCase())))
         .collect(Collectors.toList());
     }
+
+    public boolean registeredHotelCity(String nombre, String ciudad) {
+        return hoteles.stream()
+        .anyMatch(h -> h.getName().equalsIgnoreCase(nombre) && h.getCity().equalsIgnoreCase(ciudad));
+    }
 }
+
+    

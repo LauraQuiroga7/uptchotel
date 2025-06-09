@@ -96,74 +96,12 @@
     }
   </style>
 
-  <script>
-    function buscarHotel() {
-      var nombre = document.getElementById("nombre").value;
-      var ciudad = document.getElementById("ciudad").value;
-
-      var url = "/api/hoteles/buscar?";
-      if (nombre) {
-        url += "nombre=" + encodeURIComponent(nombre) + "&";
-      }
-      if (ciudad) {
-        url += "ciudad=" + encodeURIComponent(ciudad);
-      }
-
-      fetch(url)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error en la búsqueda.");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          var resultadoDiv = document.getElementById("resultado");
-          resultadoDiv.innerHTML = "";
-
-          if (data.length === 0) {
-            resultadoDiv.innerHTML = "<p>No se encontraron hoteles.</p>";
-          } else {
-            var html =
-              "<table><tr>" +
-              "<th>Nombre</th>" +
-              "<th>Ciudad</th>" +
-              "<th>Dirección</th>" +
-              "<th>Teléfono</th>" +
-              "<th>Email</th>" +
-              "<th>Capacidad</th>" +
-              "<th>Activo</th>" +
-              "</tr>";
-
-            data.forEach((hotel) => {
-              html +=
-                "<tr>" +
-                "<td>" + hotel.name + "</td>" +
-                "<td>" + hotel.city + "</td>" +
-                "<td>" + hotel.address + "</td>" +
-                "<td>" + hotel.phone + "</td>" +
-                "<td>" + hotel.email + "</td>" +
-                "<td>" + hotel.capacity + "</td>" +
-                "<td>" + (hotel.state ? "Sí" : "No") + "</td>" +
-                "</tr>";
-            });
-
-            html += "</table>";
-            resultadoDiv.innerHTML = html;
-          }
-        })
-        .catch((error) => {
-          document.getElementById("resultado").innerHTML =
-            "<p style='color:red;'>Error al buscar hoteles.</p>";
-        });
-
-      return false;
-    }
-  </script>
+  
     
   </head>
   <body>
     <h2>Buscar Hotel</h2>
-<form action="${pageContext.request.contextPath}/api/hotel/buscar" method="get">
+<form action="${pageContext.request.contextPath}/searchHotel" method="get">
     <label>Nombre:</label>
     <input type="text" name="nombre" />
     <label>Ciudad:</label>
