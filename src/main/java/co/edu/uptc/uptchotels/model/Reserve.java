@@ -2,31 +2,32 @@ package co.edu.uptc.uptchotels.model;
 
 import java.time.LocalDate;
 
-
 public class Reserve {
-     private String nameHotel;
+    private String nameHotel;
     private String cityHotel;
     private String nameCustomer;
     private String documentCustomer;
-    private String emalCustomer;
+    private String emailCustomer; // Corregido el typo
     private LocalDate entryDate;
     private LocalDate departureDate;
-    private String state;
+    private String state; // REGISTRADA, CANCELADA, CHECK-IN, CHECK-OUT, FINALIZADA
 
     public Reserve() {
     }
 
-    public Reserve(String nameHotel, String cityHotel, String nameCustomer, String documentCustomer, String emalCustomer, LocalDate entryDate, LocalDate departureDate, String state) {
+    public Reserve(String nameHotel, String cityHotel, String nameCustomer, String documentCustomer, 
+                   String emailCustomer, LocalDate entryDate, LocalDate departureDate, String state) {
         this.nameHotel = nameHotel;
         this.cityHotel = cityHotel;
         this.nameCustomer = nameCustomer;
         this.documentCustomer = documentCustomer;
-        this.emalCustomer = emalCustomer;
+        this.emailCustomer = emailCustomer;
         this.entryDate = entryDate;
         this.departureDate = departureDate;
         this.state = state;
     }
 
+    // Getters y Setters
     public String getNameHotel() {
         return nameHotel;
     }
@@ -59,12 +60,12 @@ public class Reserve {
         this.documentCustomer = documentCustomer;
     }
 
-    public String getEmalCustomer() {
-        return emalCustomer;
+    public String getEmailCustomer() {
+        return emailCustomer;
     }
 
-    public void setEmalCustomer(String emalCustomer) {
-        this.emalCustomer = emalCustomer;
+    public void setEmailCustomer(String emailCustomer) {
+        this.emailCustomer = emailCustomer;
     }
 
     public LocalDate getEntryDate() {
@@ -91,15 +92,15 @@ public class Reserve {
         this.state = state;
     }
 
+    @Override
     public String toString() {
         return "Name hotel: " + nameHotel + "\n" +
                 "City hotel: " + cityHotel + "\n" +
                 "Name customer: " + nameCustomer + "\n" +
                 "Document customer: " + documentCustomer + "\n" +
-                "Email customer: " + emalCustomer + "\n" +
+                "Email customer: " + emailCustomer + "\n" +
                 "Entry date: " + entryDate + "\n" +
                 "Departure date: " + departureDate + "\n" +
-                "State: " + state;  
+                "State: " + state;
     }
-
 }
