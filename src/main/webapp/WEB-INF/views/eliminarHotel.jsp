@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>Buscar Hotel para Editar</title>
+    <title>Eliminar Hotel</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,7 +42,7 @@
         }
 
         input[type="submit"] {
-            background-color: #007bff;
+            background-color: #dc3545;
             color: white;
             padding: 10px 20px;
             border: none;
@@ -52,7 +52,7 @@
         }
 
         input[type="submit"]:hover {
-            background-color: #0056b3;
+            background-color: #c82333;
         }
 
         a {
@@ -67,28 +67,38 @@
             text-decoration: underline;
         }
 
-        .error {
-            color: red;
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
             text-align: center;
-            margin: 10px 0;
         }
     </style>
+    <script>
+        function confirmarEliminacion() {
+            return confirm("¿Está seguro de que desea eliminar este hotel? Esta acción no se puede deshacer.");
+        }
+    </script>
 </head>
 <body>
-    <h2>Buscar Hotel para Editar</h2>
+    <h2>Eliminar Hotel</h2>
 
-    <c:if test="${not empty error}">
-        <p class="error">${error}</p>
-    </c:if>
+    <form method="post" action="${pageContext.request.contextPath}/eliminarHotel" onsubmit="return confirmarEliminacion()">
+        <div class="warning">
+            <strong>¡Advertencia!</strong><br>
+            Esta acción eliminará permanentemente el hotel del sistema.
+        </div>
 
-    <form method="get" action="${pageContext.request.contextPath}/buscarParaEditar">
         <label>Nombre del Hotel:</label>
         <input type="text" name="nombre" required />
 
         <label>Ciudad del Hotel:</label>
         <input type="text" name="ciudad" required />
 
-        <input type="submit" value="Buscar Hotel" />
+        <input type="submit" value="Eliminar Hotel" />
     </form>
 
     <a href="${pageContext.request.contextPath}/">Volver al menú principal</a>

@@ -23,6 +23,14 @@ public class HotelService {
                 .collect(Collectors.toList());
     }
 
+    // Método mejorado para buscar un hotel específico por nombre y ciudad
+    public Hotel buscarHotelEspecifico(String nombre, String ciudad) {
+        return hoteles.stream()
+                .filter(h -> h.getName().equalsIgnoreCase(nombre) && h.getCity().equalsIgnoreCase(ciudad))
+                .findFirst()
+                .orElse(null);
+    }
+
     public void editarHotel(Hotel hotelEditado) {
         for (Hotel h : hoteles) {
             if (h.getName().equalsIgnoreCase(hotelEditado.getName()) &&
@@ -32,8 +40,15 @@ public class HotelService {
                 h.setEmail(hotelEditado.getEmail());
                 h.setCapacity(hotelEditado.getCapacity());
                 h.setState(hotelEditado.isState());
+                break; // Salir del bucle una vez encontrado
             }
         }
+    }
+
+    // Nuevo método para eliminar hotel
+    public boolean eliminarHotel(String nombre, String ciudad) {
+        return hoteles.removeIf(h -> 
+            h.getName().equalsIgnoreCase(nombre) && h.getCity().equalsIgnoreCase(ciudad));
     }
 
     public void cambiarEstadoHotel(String nombre, String ciudad, boolean activo) {
@@ -41,9 +56,11 @@ public class HotelService {
             if (h.getName().equalsIgnoreCase(nombre) &&
                 h.getCity().equalsIgnoreCase(ciudad)) {
                 h.setState(activo);
+                break;
             }
         }
     }
+    
     public List<Hotel> listarHoteles() {
         return new ArrayList<>(hoteles);
     }
@@ -64,5 +81,3 @@ public class HotelService {
         .anyMatch(h -> h.getName().equalsIgnoreCase(nombre) && h.getCity().equalsIgnoreCase(ciudad));
     }
 }
-
-    

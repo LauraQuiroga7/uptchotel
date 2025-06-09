@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>Buscar Hotel para Editar</title>
+    <title>Editar Hotel</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -33,7 +33,10 @@
             font-weight: bold;
         }
 
-        input[type="text"] {
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
@@ -67,28 +70,41 @@
             text-decoration: underline;
         }
 
-        .error {
-            color: red;
-            text-align: center;
-            margin: 10px 0;
+        .readonly {
+            background-color: #f0f0f0;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <h2>Buscar Hotel para Editar</h2>
+    <h2>Editar Hotel</h2>
 
-    <c:if test="${not empty error}">
-        <p class="error">${error}</p>
-    </c:if>
+    <form method="post" action="${pageContext.request.contextPath}/editarHotel">
+        <label>Nombre (No editable):</label>
+        <input type="text" name="nombre" value="${hotel.name}" readonly class="readonly" />
 
-    <form method="get" action="${pageContext.request.contextPath}/buscarParaEditar">
-        <label>Nombre del Hotel:</label>
-        <input type="text" name="nombre" required />
+        <label>Ciudad (No editable):</label>
+        <input type="text" name="ciudad" value="${hotel.city}" readonly class="readonly" />
 
-        <label>Ciudad del Hotel:</label>
-        <input type="text" name="ciudad" required />
+        <label>Dirección:</label>
+        <input type="text" name="direccion" value="${hotel.address}" required />
 
-        <input type="submit" value="Buscar Hotel" />
+        <label>Teléfono:</label>
+        <input type="text" name="telefono" value="${hotel.phone}" required />
+
+        <label>Email:</label>
+        <input type="email" name="email" value="${hotel.email}" required />
+
+        <label>Capacidad:</label>
+        <input type="number" name="capacidad" value="${hotel.capacity}" required />
+
+        <label>Estado:</label>
+        <select name="activo">
+            <option value="true" ${hotel.state ? 'selected' : ''}>Activo</option>
+            <option value="false" ${!hotel.state ? 'selected' : ''}>Inactivo</option>
+        </select>
+
+        <input type="submit" value="Actualizar Hotel" />
     </form>
 
     <a href="${pageContext.request.contextPath}/">Volver al menú principal</a>

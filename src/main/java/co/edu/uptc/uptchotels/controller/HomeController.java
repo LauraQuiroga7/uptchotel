@@ -62,21 +62,79 @@ public class HomeController {
         return "editarHotel"; // Muestra /WEB-INF/views/editarHotel.jsp
     }
 
+    // Nuevo endpoint para buscar hotel antes de editar
+    @GetMapping("/buscarParaEditar")
+    public String buscarHotelParaEditar(@RequestParam String nombre,
+                                      @RequestParam String ciudad,
+                                      Model model) {
+        Hotel hotel = hotelService.buscarHotelEspecifico(nombre, ciudad);
+        if (hotel != null) {
+            model.addAttribute("hotel", hotel);
+            return "editarHotelForm"; // Nueva vista con el formulario de edición
+        } else {
+            model.addAttribute("error", "Hotel no encontrado");
+            return "editarHotel";
+        }
+    }
+
+    // Endpoint para procesar la edición
+    @PostMapping("/editarHotel")
+    public String procesarEdicionHotel(@RequestParam String nombre,
+                                     @RequestParam String ciudad,
+                                     @RequestParam String direccion,
+                                     @RequestParam String telefono,
+                                     @RequestParam String email,
+                                     @RequestParam int capacidad,
+                                     @RequestParam boolean activo,
+                                     Model model) {
+        Hotel hotel = new Hotel();
+        hotel.setName(nombre);
+        hotel.setCity(ciudad);
+        hotel.setAddress(direccion);
+        hotel.setPhone(telefono);
+        hotel.setEmail(email);
+        hotel.setCapacity(capacidad);
+        hotel.setState(activo);
+
+        hotelService.editarHotel(hotel);
+        model.addAttribute("success", "Hotel editado correctamente");
+        return "redirect:/listarHoteles";
+    }
+
+    // Nuevo endpoint para eliminar hotel
+    @GetMapping("/eliminarHotel")
+    public String eliminarHotelPage() {
+        return "eliminarHotel";
+    }
+
+    @PostMapping("/eliminarHotel")
+    public String eliminarHotel(@RequestParam String nombre,
+                              @RequestParam String ciudad,
+                              Model model) {
+        boolean eliminado = hotelService.eliminarHotel(nombre, ciudad);
+        if (eliminado) {
+            model.addAttribute("success", "Hotel eliminado correctamente");
+        } else {
+            model.addAttribute("error", "Hotel no encontrado");
+        }
+        return "redirect:/listarHoteles";
+    }
+
     @GetMapping("/buscarHotel")
     public String buscarHotelPage() {
         return "buscarHotel"; // Muestra /WEB-INF/views/buscarHotel.jsp
     }
+    
     @GetMapping("/searchHotel")
-public String buscarHoteles(
-        @RequestParam(required = false) String nombre,
-        @RequestParam(required = false) String ciudad,
-        Model model) {
+    public String buscarHoteles(
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String ciudad,
+            Model model) {
 
-    List<Hotel> resultados = hotelService.searchCityName(nombre, ciudad);
-    model.addAttribute("listaHoteles", resultados);
-    return "listarHoteles";
-}
-
+        List<Hotel> resultados = hotelService.searchCityName(nombre, ciudad);
+        model.addAttribute("listaHoteles", resultados);
+        return "listarHoteles";
+    }
 
     @GetMapping("/cambiarEstadoHotel")
     public String cambiarEstadoHotelPage() {
@@ -109,5 +167,4 @@ public String buscarHoteles(
     public String reporteReservasPage() {
         return "reporteReservas"; // Muestra /WEB-INF/views/reporteReservas.jsp
     }
-
 }
