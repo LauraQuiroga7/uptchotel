@@ -3,6 +3,7 @@ package co.edu.uptc.uptchotels.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,11 +27,16 @@ public class HotelController {
         hotelService.registrarHotel(hotel);
     }
 
-    @GetMapping("/buscar")
-    public List<Hotel> buscarHoteles(@RequestParam(required = false) String nombre,
-                                     @RequestParam(required = false) String ciudad) {
-        return hotelService.buscarHoteles(nombre, ciudad);
-    }
+    @GetMapping("/api/hotel/buscar")
+   public String buscarHoteles(
+        @RequestParam(required = false) String nombre,
+        @RequestParam(required = false) String ciudad,
+        Model model) {
+
+    List<Hotel> resultados = hotelService.searchCityName(nombre, ciudad);
+    model.addAttribute("listarHoteles", resultados);
+    return "listarHoteles"; // JSP que muestra la tabla
+}
     @GetMapping("/listarHoteles")
     public List<Hotel> listarHoteles() {
         return hotelService.listarHoteles();

@@ -51,4 +51,11 @@ public class HotelService {
     public List<Hotel> getHoteles() {
         return hoteles;
     }
+
+    public List<Hotel> searchCityName(String nombre, String ciudad) {
+         return hoteles.stream()
+        .filter(hotel -> (nombre == null || hotel.getName().toLowerCase().contains(nombre.toLowerCase())) &&
+                         (ciudad == null || hotel.getCity().toLowerCase().contains(ciudad.toLowerCase())))
+        .collect(Collectors.toList());
+    }
 }
