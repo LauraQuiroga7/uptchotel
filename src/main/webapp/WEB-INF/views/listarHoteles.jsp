@@ -4,24 +4,72 @@
 <html>
 <head>
     <title>Lista de Hoteles</title>
-    <style>
+     <style>
         body {
-            font-family: Arial;
-            margin: 40px;
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+            margin: 0;
+            padding: 20px;
         }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-top: 20px;
+        }
+
         table {
+            width: 90%;
+            margin: 30px auto;
             border-collapse: collapse;
-            width: 100%;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
         }
-        table, th, td {
-            border: 1px solid #666;
-        }
+
         th, td {
-            padding: 10px;
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
             text-align: left;
         }
-        .activo { color: green; }
-        .inactivo { color: red; }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .activo {
+            color: green;
+            font-weight: bold;
+        }
+
+        .inactivo {
+            color: red;
+            font-weight: bold;
+        }
+
+        a {
+            display: block;
+            width: fit-content;
+            margin: 0 auto;
+            margin-top: 30px;
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -61,6 +109,6 @@
     </table>
 
     <br>
-    <a href="/">Volver al menú</a>
+<a href="${pageContext.request.contextPath}/">Volver al menú</a>
 </body>
 </html>

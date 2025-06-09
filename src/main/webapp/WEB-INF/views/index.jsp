@@ -1,10 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-  <!DOCTYPE html>
-  <html>
+  <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-  <head>
-    <meta charset="UTF-8" />
-    <title>UPTCHotels - Menú Principal</title>
+    <!DOCTYPE html>
+    <html>
+
+    <head>
+      <meta charset="UTF-8" />
+      <title>UPTCHotels - Menú Principal</title>
+          
+
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -74,35 +78,35 @@
         display: block;
       }
     </style>
-  </head>
+    </head>
 
-  <body>
-    <div class="navbar">
-      <div class="dropdown">
-        <button class="dropbtn">Hoteles ▼</button>
-        <div class="dropdown-content">
-          <a href="registrarHotel">Registrar Hotel</a>
-          <a href="editarHotel">editar Hotel</a>
-          <a href="buscarHotel">Buscar Hotel</a>
-          <a href="cambiarEstadoHotel">Cambiar Estado Hotel</a>
-         <a href="listarHoteles">Listar Hoteles</a>
+    <body>
+      <div class="navbar">
+        <div class="dropdown">
+          <button class="dropbtn">Hoteles ▼</button>
+          <div class="dropdown-content">
+            <a href="registrarHotel">Registrar Hotel</a>
+            <a href="editarHotel">editar Hotel</a>
+            <a href="buscarHotel">Buscar Hotel</a>
+            <a href="cambiarEstadoHotel">Cambiar Estado Hotel</a>
+            <a href="listarHoteles">Listar Hoteles</a>
 
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="dropbtn">Reservas ▼</button>
+          <div class="dropdown-content">
+            <a href="registrarReserva">Registrar Reserva</a>
+            <a href="cambiarEstadoReserva">Cambiar Estado Reserva</a>
+            <a href="reporteReservas">Reporte de Reservas</a>
+          </div>
         </div>
       </div>
-      <div class="dropdown">
-        <button class="dropbtn">Reservas ▼</button>
-        <div class="dropdown-content">
-          <a href="registrarReserva">Registrar Reserva</a>
-          <a href="cambiarEstadoReserva">Cambiar Estado Reserva</a>
-          <a href="reporteReservas">Reporte de Reservas</a>
-        </div>
+
+      <div style="padding: 20px">
+        <h2>Bienvenido a UPTCHotels</h2>
+        <p>Seleccione una opción del menú para comenzar.</p>
       </div>
-    </div>
+    </body>
 
-    <div style="padding: 20px">
-      <h2>Bienvenido a UPTCHotels</h2>
-      <p>Seleccione una opción del menú para comenzar.</p>
-    </div>
-  </body>
-
-  </html>
+    </html>
