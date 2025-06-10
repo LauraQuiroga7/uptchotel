@@ -38,10 +38,9 @@ public class ReserveController {
         }
     }
 
-    
-    @PutMapping("/cambiarEstado")
-    public ResponseEntity<String> cambiarEstadoReserva(@RequestParam int idReserva,
-                                                       @RequestParam String nuevoEstado) {
+        @PutMapping("/cambiarEstado")
+        public ResponseEntity<String> cambiarEstadoReserva(@RequestParam int idReserva,
+            @RequestParam String nuevoEstado) {
         try {
             reserveService.cambiarEstadoReserva(idReserva, nuevoEstado);
             return ResponseEntity.ok("Estado de la reserva actualizado correctamente.");
@@ -59,16 +58,17 @@ public class ReserveController {
 
     @GetMapping("/buscar")
     public List<Reserve> buscarReservas(@RequestParam(required = false) String nombreHotel,
-                                       @RequestParam(required = false) String ciudadHotel,
-                                       @RequestParam(required = false) String documentoCliente,
-                                       @RequestParam(required = false) String estado) {
+            @RequestParam(required = false) String ciudadHotel,
+            @RequestParam(required = false) String documentoCliente,
+            @RequestParam(required = false) String estado) {
         return reserveService.buscarReservas(nombreHotel, ciudadHotel, documentoCliente, estado);
     }
 
     @GetMapping("/reporte")
-    public ResponseEntity<ReserveReport> generarReporte(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
-                                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
-                                                        @RequestParam(required = false) String ciudad) {
+    public ResponseEntity<ReserveReport> generarReporte(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
+            @RequestParam(required = false) String ciudad) {
         try {
             ReserveReport reporte = reserveService.generarReporte(fechaInicio, fechaFin, ciudad);
             return ResponseEntity.ok(reporte);
@@ -79,11 +79,12 @@ public class ReserveController {
 
     @GetMapping("/verificarDisponibilidad")
     public ResponseEntity<String> verificarDisponibilidad(@RequestParam String nombreHotel,
-                                                         @RequestParam String ciudadHotel,
-                                                         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaLlegada,
-                                                         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaSalida) {
+            @RequestParam String ciudadHotel,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaLlegada,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaSalida) {
         try {
-            int habitacionesDisponibles = reserveService.verificarDisponibilidad(nombreHotel, ciudadHotel, fechaLlegada, fechaSalida);
+            int habitacionesDisponibles = reserveService.verificarDisponibilidad(nombreHotel, ciudadHotel, fechaLlegada,
+                    fechaSalida);
             return ResponseEntity.ok("Habitaciones disponibles: " + habitacionesDisponibles);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());

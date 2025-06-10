@@ -67,52 +67,61 @@
       a:hover {
         text-decoration: underline;
       }
+
+      #mensaje {
+        text-align: center;
+        margin-top: 15px;
+        font-weight: bold;
+      }
     </style>
   </head>
 
   <body>
     <h2>Registrar Hotel</h2>
-    <c:if test="${not empty error}">
-  <p style="color:red;">${error}</p>
-</c:if>
-    <form action="${pageContext.request.contextPath}/registrarHotel" method="post"
-      onsubmit="return validarFormulario()">
+
+    <form id="formHotel" onsubmit="enviarFormulario(event)">
       <label>Nombre:</label>
-      <input type="text" name="nombre" id="nombre" /><br /><br />
+      <input type="text" id="name" /><br />
 
       <label>Ciudad:</label>
-      <input type="text" name="ciudad" id="ciudad" /><br /><br />
+      <input type="text" id="city" /><br />
 
       <label>Dirección:</label>
-      <input type="text" name="direccion" id="direccion" /><br /><br />
+      <input type="text" id="address" /><br />
 
       <label>Teléfono:</label>
-      <input type="text" name="telefono" id="telefono" /><br /><br />
+      <input type="text" id="phone" /><br />
 
       <label>Email:</label>
-      <input type="email" name="email" id="email" /><br /><br />
+      <input type="email" id="email" /><br />
 
       <label>Capacidad:</label>
-      <input type="number" name="capacidad" id="capacidad" /><br /><br />
+      <input type="number" id="capacity" /><br />
 
       <label>Activo:</label>
-      <select name="activo" id="activo">
+      <select id="state">
         <option value="true">Activo</option>
         <option value="false">Inactivo</option>
-      </select>
-      <br /><br />
+      </select><br />
 
       <input type="submit" value="Registrar" />
     </form>
-    <script>
-      function validarFormulario() {
-        const campos = ["nombre", "ciudad", "direccion", "telefono", "email", "capacidad"];
 
+    <p id="mensaje"></p>
+
+    <a href="${pageContext.request.contextPath}/">Volver al menú</a>
+
+    <script>
+      async function enviarFormulario(event) {
+        event.preventDefault(); // Evita que se envíe el formulario tradicionalmente
+
+        // Validación básica
+        const campos = ["name", "city", "address", "phone", "email", "capacity"];
         for (let campo of campos) {
           const valor = document.getElementById(campo).value.trim();
           if (valor === "") {
             alert("El campo '" + campo + "' no puede estar vacío.");
-            return false;
+            return;
           }
         }
 
@@ -120,22 +129,49 @@
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
           alert("El correo electrónico no es válido.");
-          return false;
+          return;
         }
 
-        const capacidad = parseInt(document.getElementById("capacidad").value.trim(), 10);
+        const capacidad = parseInt(document.getElementById("capacity").value.trim(), 10);
         if (isNaN(capacidad) || capacidad <= 0) {
           alert("La capacidad debe ser un número positivo.");
-          return false;
+          return;
         }
 
-        return true; // Si todo está correcto, permite enviar el formulario
+        // Preparar objeto para enviar
+        const hotel = {
+          name: document.getElementById("name").value.trim(),
+          city: document.getElementById("city").value.trim(),
+          address: document.getElementById("address").value.trim(),
+          phone: document.getElementById("phone").value.trim(),
+          email: document.getElementById("email").value.trim(),
+          capacity: parseInt(document.getElementById("capacity").value.trim(), 10),
+          state: document.getElementById("state").value === "true"
+        };
+
+        try {
+          const response = await fetch("${pageContext.request.contextPath}/apiRegistro", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(hotel)
+          });
+
+          if (response.ok) {
+            alert("Hotel registrado exitosamente");
+            // Redireccionar al menú principal
+            window.location.href = "${pageContext.request.contextPath}/";
+          } else {
+            const errorText = await response.text();
+            alert("Error al registrar el hotel: " + errorText);
+          }
+        } catch (error) {
+          console.error("Error de red:", error);
+          alert("Ocurrió un error de red al registrar el hotel");
+        }
       }
     </script>
-
-    <br />
-    <a href="${pageContext.request.contextPath}/">Volver al menú</a>
-
   </body>
 
   </html>
