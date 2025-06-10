@@ -8,7 +8,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,22 +37,14 @@ public class ReserveController {
         }
     }
 
-    @PutMapping("/cambiarEstado")
-    public ResponseEntity<String> cambiarEstadoReserva(@RequestParam String nombreHotel,
-                                                      @RequestParam String ciudadHotel,
-                                                      @RequestParam String documentoCliente,
-                                                      @RequestParam String nuevoEstado) {
-        try {
-            String resultado = reserveService.cambiarEstadoReserva(nombreHotel, ciudadHotel, documentoCliente, nuevoEstado);
-            if (resultado.startsWith("Error")) {
-                return ResponseEntity.badRequest().body(resultado);
-            }
-            return ResponseEntity.ok(resultado);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error al cambiar estado: " + e.getMessage());
-        }
-    }
-
+    @PostMapping("/cambiarEstadoFormulario")
+public String cambiarEstadoReservaDesdeFormulario(@RequestParam String hotel,
+                                                  @RequestParam String ciudad,
+                                                  @RequestParam String documento,
+                                                  @RequestParam String estado) {
+    reserveService.cambiarEstadoReserva(hotel, ciudad, documento, estado);
+    return "/"; 
+}
     @GetMapping("/listar")
     public List<Reserve> listarReservas() {
         return reserveService.listarReservas();

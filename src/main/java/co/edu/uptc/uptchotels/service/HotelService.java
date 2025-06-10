@@ -14,6 +14,7 @@ public class HotelService {
 
     public void registrarHotel(Hotel hotel) {
         hoteles.add(hotel);
+        System.out.println("Hotel registrado: " + hotel.getName() + " en " + hotel.getCity());
     }
 
     public List<Hotel> buscarHoteles(String nombre, String ciudad) {
@@ -25,11 +26,14 @@ public class HotelService {
 
     // Método mejorado para buscar un hotel específico por nombre y ciudad
     public Hotel buscarHotelEspecifico(String nombre, String ciudad) {
-        return hoteles.stream()
-                .filter(h -> h.getName().equalsIgnoreCase(nombre) && h.getCity().equalsIgnoreCase(ciudad))
-                .findFirst()
-                .orElse(null);
+    for (Hotel h : hoteles) {
+        if (h.getName().equalsIgnoreCase(nombre) && h.getCity().equalsIgnoreCase(ciudad)) {
+            return h;
+        }
     }
+    return null;
+}
+
 
     public void editarHotel(Hotel hotelEditado) {
         for (Hotel h : hoteles) {
