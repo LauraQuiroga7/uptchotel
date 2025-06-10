@@ -3,6 +3,7 @@ package co.edu.uptc.uptchotels.model;
 import java.time.LocalDate;
 
 public class Reserve {
+    private int id;
     private String nameHotel;
     private String cityHotel;
     private String nameCustomer;
@@ -15,8 +16,9 @@ public class Reserve {
     public Reserve() {
     }
 
-    public Reserve(String nameHotel, String cityHotel, String nameCustomer, String documentCustomer, 
+    public Reserve(int id, String nameHotel, String cityHotel, String nameCustomer, String documentCustomer, 
                    String emailCustomer, LocalDate entryDate, LocalDate departureDate, String state) {
+                    this.id = id;
         this.nameHotel = nameHotel;
         this.cityHotel = cityHotel;
         this.nameCustomer = nameCustomer;
@@ -94,7 +96,8 @@ public class Reserve {
 
     @Override
     public String toString() {
-        return "Name hotel: " + nameHotel + "\n" +
+        return "ID: " + id + "\n" +
+        "Name hotel: " + nameHotel + "\n" +
                 "City hotel: " + cityHotel + "\n" +
                 "Name customer: " + nameCustomer + "\n" +
                 "Document customer: " + documentCustomer + "\n" +
@@ -102,5 +105,13 @@ public class Reserve {
                 "Entry date: " + entryDate + "\n" +
                 "Departure date: " + departureDate + "\n" +
                 "State: " + state;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

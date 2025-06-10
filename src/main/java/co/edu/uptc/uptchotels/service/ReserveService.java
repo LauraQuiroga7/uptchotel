@@ -2,6 +2,7 @@ package co.edu.uptc.uptchotels.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Service;
 
 import co.edu.uptc.uptchotels.model.Hotel;
 import co.edu.uptc.uptchotels.model.Reserve;
+import co.edu.uptc.uptchotels.model.ReserveReporltem;
 import co.edu.uptc.uptchotels.model.ReserveReport;
-import co.edu.uptc.uptchotels.model.ReserveReportEntry;
 
 @Service
 public class ReserveService {
@@ -69,42 +70,40 @@ public class ReserveService {
         
         // Registrar la reserva
         reservas.add(reserve);
-        
+        System.out.println("Registro exitoso");
         return "Reserva registrada exitosamente";
     }
 
-    public String cambiarEstadoReserva(String nombreHotel, String ciudadHotel, String documentoCliente, String nuevoEstado) {
-        Reserve reserva = buscarReservaEspecifica(nombreHotel, ciudadHotel, documentoCliente);
-        
-        if (reserva == null) {
-            return "Error: Reserva no encontrada";
-        }
+    public void cambiarEstadoReserva(int idReserva, String nuevoEstado) {
+        Reserve reserva = reservas.stream()
+                .filter(r -> r.getId() == idReserva)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada."));
 
         String estadoActual = reserva.getState();
-        
-        // Validar transiciones de estado permitidas
-        if (!esTransicionValida(estadoActual, nuevoEstado)) {
-            return "Error: Transición de estado no permitida de " + estadoActual + " a " + nuevoEstado;
+
+        // Normalizar los estados - convertir todo a mayúsculas para comparación
+        String estadoActualNormalizado = estadoActual.toUpperCase();
+        String nuevoEstadoNormalizado = nuevoEstado.toUpperCase();
+
+        // Validar transiciones permitidas según el enunciado
+        boolean cambioValido = false;
+
+        if (estadoActualNormalizado.equals("REGISTRADA")) {
+            if (nuevoEstadoNormalizado.equals("CANCELADA") || nuevoEstadoNormalizado.equals("CHECK-IN")) {
+                cambioValido = true;
+            }
+        } else if (estadoActualNormalizado.equals("CHECK-IN")) {
+            if (nuevoEstadoNormalizado.equals("CHECK-OUT")) {
+                cambioValido = true;
+            }
         }
 
-        reserva.setState(nuevoEstado);
-        return "Estado de reserva cambiado exitosamente a " + nuevoEstado;
-    }
-
-    private boolean esTransicionValida(String estadoActual, String nuevoEstado) {
-        switch (estadoActual) {
-            case "REGISTRADA":
-                return "CANCELADA".equals(nuevoEstado) || "CHECK-IN".equals(nuevoEstado);
-            case "CHECK-IN":
-                return "CHECK-OUT".equals(nuevoEstado);
-            case "CHECK-OUT":
-                return "FINALIZADA".equals(nuevoEstado);
-            case "CANCELADA":
-            case "FINALIZADA":
-                return false; // Estados finales, no se pueden cambiar
-            default:
-                return false;
+        if (!cambioValido) {
+            throw new IllegalArgumentException("Transición de estado no permitida. Estado actual: " + estadoActual + ", Nuevo estado: " + nuevoEstado);
         }
+
+        reserva.setState(nuevoEstadoNormalizado);
     }
 
     public int verificarDisponibilidad(String nombreHotel, String ciudadHotel, LocalDate fechaLlegada, LocalDate fechaSalida) {
@@ -153,62 +152,41 @@ public class ReserveService {
 
     public ReserveReport generarReporte(LocalDate fechaInicio, LocalDate fechaFin, String ciudad) {
         List<Reserve> reservasFiltradas = reservas.stream()
-            .filter(r -> (ciudad == null || r.getCityHotel().equalsIgnoreCase(ciudad)) &&
-                        !r.getEntryDate().isAfter(fechaFin) &&
-                        !r.getDepartureDate().isBefore(fechaInicio))
-            .collect(Collectors.toList());
+                .filter(r -> r.getEntryDate() != null &&
+                             !r.getEntryDate().isBefore(fechaInicio) &&
+                             !r.getEntryDate().isAfter(fechaFin))
+                .filter(r -> ciudad == null || ciudad.isEmpty() ||
+                             r.getCityHotel().equalsIgnoreCase(ciudad))
+                .collect(Collectors.toList());
 
-        Map<String, Map<LocalDate, ReserveReportEntry>> reporteMap = new HashMap<>();
+        Map<String, ReserveReporltem> mapaReporte = new HashMap<>();
 
-        // Procesar cada día en el rango
-        LocalDate fechaActual = fechaInicio;
-        while (!fechaActual.isAfter(fechaFin)) {
-            final LocalDate fecha = fechaActual;
-            
-            // Agrupar por hotel
-            Map<String, List<Reserve>> reservasPorHotel = reservasFiltradas.stream()
-                .collect(Collectors.groupingBy(r -> r.getNameHotel() + " - " + r.getCityHotel()));
+        for (Reserve r : reservasFiltradas) {
+            String key = r.getEntryDate() + "|" + r.getNameHotel();
 
-            for (Map.Entry<String, List<Reserve>> entry : reservasPorHotel.entrySet()) {
-                String hotelKey = entry.getKey();
-                List<Reserve> reservasHotel = entry.getValue();
+            ReserveReporltem item = mapaReporte.getOrDefault(key, new ReserveReporltem(r.getEntryDate(), r.getNameHotel()));
 
-                reporteMap.putIfAbsent(hotelKey, new HashMap<>());
-
-                // Contar reservas para esta fecha
-                int registradas = (int) reservasHotel.stream()
-                    .filter(r -> "REGISTRADA".equals(r.getState()) &&
-                                !r.getEntryDate().isAfter(fecha) &&
-                                !r.getDepartureDate().isBefore(fecha))
-                    .count();
-
-                int checkIn = (int) reservasHotel.stream()
-                    .filter(r -> "CHECK-IN".equals(r.getState()) &&
-                                !r.getEntryDate().isAfter(fecha) &&
-                                !r.getDepartureDate().isBefore(fecha))
-                    .count();
-
-                int checkOut = (int) reservasHotel.stream()
-                    .filter(r -> "CHECK-OUT".equals(r.getState()) &&
-                                r.getDepartureDate().equals(fecha))
-                    .count();
-
-                ReserveReportEntry reportEntry = new ReserveReportEntry(
-                    fecha, hotelKey.split(" - ")[0], registradas, checkIn, checkOut
-                );
-
-                reporteMap.get(hotelKey).put(fecha, reportEntry);
+            // Corregir los nombres de estados para que coincidan con los normalizados
+            String estado = r.getState().toUpperCase();
+            switch (estado) {
+                case "REGISTRADA":
+                    item.setRegistradas(item.getRegistradas() + 1);
+                    break;
+                case "CHECK-IN":
+                    item.setCheckIn(item.getCheckIn() + 1);
+                    break;
+                case "CHECK-OUT":
+                    item.setCheckOut(item.getCheckOut() + 1);
+                    break;
             }
 
-            fechaActual = fechaActual.plusDays(1);
+            mapaReporte.put(key, item);
         }
 
-        // Convertir a lista
-        List<ReserveReportEntry> reporteEntries = new ArrayList<>();
-        for (Map<LocalDate, ReserveReportEntry> hotelReport : reporteMap.values()) {
-            reporteEntries.addAll(hotelReport.values());
-        }
+        List<ReserveReporltem> listaItems = new ArrayList<>(mapaReporte.values());
+        listaItems.sort(Comparator.comparing(ReserveReporltem::getFechaLlegada)
+                                  .thenComparing(ReserveReporltem::getNombreHotel));
 
-        return new ReserveReport(fechaInicio, fechaFin, ciudad, reporteEntries);
+        return new ReserveReport(listaItems);
     }
 }

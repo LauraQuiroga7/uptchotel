@@ -38,19 +38,17 @@ public class ReserveController {
         }
     }
 
+    
     @PutMapping("/cambiarEstado")
-    public ResponseEntity<String> cambiarEstadoReserva(@RequestParam String nombreHotel,
-                                                      @RequestParam String ciudadHotel,
-                                                      @RequestParam String documentoCliente,
-                                                      @RequestParam String nuevoEstado) {
+    public ResponseEntity<String> cambiarEstadoReserva(@RequestParam int idReserva,
+                                                       @RequestParam String nuevoEstado) {
         try {
-            String resultado = reserveService.cambiarEstadoReserva(nombreHotel, ciudadHotel, documentoCliente, nuevoEstado);
-            if (resultado.startsWith("Error")) {
-                return ResponseEntity.badRequest().body(resultado);
-            }
-            return ResponseEntity.ok(resultado);
+            reserveService.cambiarEstadoReserva(idReserva, nuevoEstado);
+            return ResponseEntity.ok("Estado de la reserva actualizado correctamente.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error al cambiar estado: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Error interno del servidor");
         }
     }
 
@@ -69,8 +67,8 @@ public class ReserveController {
 
     @GetMapping("/reporte")
     public ResponseEntity<ReserveReport> generarReporte(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
-                                                       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
-                                                       @RequestParam(required = false) String ciudad) {
+                                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
+                                                        @RequestParam(required = false) String ciudad) {
         try {
             ReserveReport reporte = reserveService.generarReporte(fechaInicio, fechaFin, ciudad);
             return ResponseEntity.ok(reporte);
